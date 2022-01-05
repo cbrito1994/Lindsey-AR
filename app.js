@@ -48,7 +48,7 @@ const init = async () => {
         trackedImages: [
             {
                 image: imgBitmap,
-                widthInMeters: 0.5
+                widthInMeters: 0.2
             }
         ]
     });
