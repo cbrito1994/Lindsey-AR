@@ -30,7 +30,6 @@ const init = async () => {
     document.body.appendChild(container);
     
     scene = new THREE.Scene();
-    console.log(scene)
 
     // PerspectiveCamera( fov : Number, aspect : Number, near : Number, far : Number )
     camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 40);
@@ -59,7 +58,6 @@ const init = async () => {
     scene.add(model);
 
     const imageUrl = 'https://raw.githubusercontent.com/cbrito1994/Lindsey-AR/main/assets/lindsey-shatterMe.jpg';
-    console.log(imageUrl)
     const imgBitmap = await getImageBitmap(imageUrl);
 
     const button = ARButton.createButton(renderer, {
@@ -70,8 +68,8 @@ const init = async () => {
                 widthInMeters: 0.2
             }
         ]
-      });
-    document.body.appendChild(button);
+    });
+
 
     document.body.appendChild(button);
     window.addEventListener('resize', onWindowResize, false);
@@ -111,6 +109,7 @@ const render = (timestamp, frame) => {
             const state = result.trackingState;
             console.log(state);
             if(state === "tracked") {
+                console.log("Image target has been found")
                 model.visible = true;
                 updateModel(pose); // Update the position of the model based on the pose. Once we get the position of the image, we want to transfer that info into the model
             } else {
