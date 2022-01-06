@@ -61,14 +61,15 @@ const init = async () => {
     const imgBitmap = await getImageBitmap(imageUrl);
 
     const button = ARButton.createButton(renderer, {
-        requiredFeatures: ['image-tracking'],
+        requiredFeatures: ["image-tracking"], // notice a new required feature
         trackedImages: [
             {
-                image: imgBitmap,
+                image: imgBitmap, // tell webxr this is the image target we want to track
                 widthInMeters: 0.2
             }
         ]
-    });
+      });
+    document.body.appendChild(button);
 
     document.body.appendChild(button);
     window.addEventListener('resize', onWindowResize, false);
