@@ -44,10 +44,9 @@ const init = async () => {
     light.position.set(0.5, 1, 0.25);
     scene.add(light);
 
-    // const modelUrl = 'https://raw.githubusercontent.com/cbrito1994/AR-Models/main/stradivariViolin.glb'
-    const modelUrl = 'https://raw.githubusercontent.com/cbrito1994/Lindsey-AR/main/assets/stradivariViolin.glb'
+    const modelUrl = 'https://raw.githubusercontent.com/cbrito1994/AR-Models/main/stradivariViolin.glb'
+    // const modelUrl = 'https://raw.githubusercontent.com/cbrito1994/Lindsey-AR/main/assets/stradivariViolin.glb'
 
-    console.log(modelUrl)
     loader = new THREE.GLTFLoader();
     const gltf = await loader.loadAsync(modelUrl);
     console.log(gltf)
