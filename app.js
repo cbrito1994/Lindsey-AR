@@ -50,7 +50,8 @@ const init = async () => {
     const gltf = await loader.loadAsync(modelUrl);
     console.log(gltf)
     model = gltf.scene;
-    model.translate(0, 0, 1) // (x, y, z);
+    model.multiplyScalar(0.5);
+    model.translate(0, 0, 0.5); // (x, y, z);
     model.matrixAutoUpdate = false;
     model.visible = false;
     scene.add(model);
