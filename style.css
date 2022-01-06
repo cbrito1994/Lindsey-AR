@@ -1,0 +1,39 @@
+body {
+	margin: 0;
+	background-color: #000;
+	color: #fff;
+	font-family: Monospace;
+	font-size: 16px;
+	line-height: 24px;
+	overscroll-behavior: none;
+}
+
+#list b {
+  margin-right: 2px;
+}
+
+a {
+	color: #ff0;
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+button {
+	cursor: pointer;
+	text-transform: uppercase;
+}
+
+canvas {
+	display: block;
+}
+
+a, button, input, select {
+	pointer-events: auto;
+}
+
+.eruda-container {
+	z-index: 1000000 !important
+}
