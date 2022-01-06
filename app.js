@@ -43,17 +43,19 @@ const init = async () => {
     light.position.set(0.5, 1, 0.25);
     scene.add(light);
 
-    const modelUrl = 'https://raw.githubusercontent.com/cbrito1994/AR-Models/main/stradivariViolin.glb'
-    // const modelUrl = 'https://raw.githubusercontent.com/cbrito1994/Lindsey-AR/main/assets/stradivariViolin.glb'
+    // const modelUrl = 'https://raw.githubusercontent.com/cbrito1994/AR-Models/main/stradivariViolin.glb'
+    const modelUrl = 'https://raw.githubusercontent.com/cbrito1994/Lindsey-AR/main/assets/stradivariViolin.glb'
 
     loader = new THREE.GLTFLoader();
     const gltf = await loader.loadAsync(modelUrl);
     console.log(gltf)
     model = gltf.scene;
     model.multiplyScalar(0.5);
-    model.translate(0, 0, 0.5); // (x, y, z);
+    model.translate(0, 0, 0.2); // (x, y, z);
     model.matrixAutoUpdate = false;
     model.visible = false;
+    model.rotateX(THREE.Math.degToRad(90));
+    model.rotateY(THREE.Math.degToRad(360));
     scene.add(model);
 
     const imageUrl = 'https://raw.githubusercontent.com/cbrito1994/Lindsey-AR/main/assets/lindsey-shatterMe.jpg';
