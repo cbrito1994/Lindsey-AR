@@ -5,6 +5,8 @@ let camera, scene, renderer;
 let loader;
 let model;
 
+console.log(ARButton)
+
 const setupMobileDebug = () => {
     // First thing we do is setup the mobile debug console
     // This library is very big so only use it while debugging
