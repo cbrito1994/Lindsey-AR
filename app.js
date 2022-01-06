@@ -5,6 +5,24 @@ let camera, scene, renderer;
 let loader;
 let model;
 
+function setupMobileDebug() {
+    // First thing we do is setup the mobile debug console
+    // This library is very big so only use it while debugging
+    // just comment it out when your app is done
+
+    const containerEl = document.getElementById("console-ui");
+    eruda.init({
+        container: containerEl // where we wanna contain the eruda class
+    });
+    const devToolEl = containerEl.shadowRoot.querySelector('.eruda-dev-tools');
+    devToolEl.style.height = '40%'; // control the height of the dev tool panel
+}
+
+let i = 0;
+function logsForMobileDebug() {
+    console.log(i++);
+}
+
 const init = async () => {
     const container = document.createElement("div");
     document.body.appendChild(container);
@@ -103,3 +121,5 @@ const render = (timestamp, frame) => {
 
 init();
 animate();
+setupMobileDebug();
+setInterval(logsForMobileDebug, 1000);
