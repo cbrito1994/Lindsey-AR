@@ -83,6 +83,21 @@ const onWindowResize = () => {
     renderer.setSize(window.innerWidth / window.innerHeight);
 }
 
+const animate = () => {
+    renderer.setAnimationLoop(render);
+}
+
+const getImageBitmap = async (url) => {
+    const response = await fetch(url);
+    const blob = await response.blob();
+    const imageBitmap = await createImageBitmap(blob);
+    return imageBitmap;
+}
+
+const updateModel = (pose) => {
+    model.matrix.fromArray(pose.transform.matrix); // It converts all the info of position and rotation from the pose (which again, represents where the image is) into the model
+}
+
 const render = (timestamp, frame) => {
     if(frame) {
         const results = frame.getImageTrackingResults(); // Can you tell me if there are any images that we tracked and where they are. The resul is an array
@@ -104,21 +119,6 @@ const render = (timestamp, frame) => {
         }
     }
     renderer.render(scene, camera);
-}
-
-const animate = () => {
-    renderer.setAnimationLoop(render);
-}
-
-const getImageBitmap = async (url) => {
-    const response = await fetch(url);
-    const blob = await response.blob();
-    const imageBitmap = await createImageBitmap(blob);
-    return imageBitmap;
-}
-
-const updateModel = (pose) => {
-    model.matrix.fromArray(pose.transform.matrix); // It converts all the info of position and rotation from the pose (which again, represents where the image is) into the model
 }
 
 init();
