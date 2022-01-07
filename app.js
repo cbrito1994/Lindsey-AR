@@ -4,7 +4,10 @@ let camera, scene, renderer;
 let loader;
 let model;
 
-console.log(ARButton)
+let sound;
+let listener;
+let audioIsPlaying = false;
+let audioIsInitialized = false;
 
 const setupMobileDebug = () => {
     // First thing we do is setup the mobile debug console
@@ -50,13 +53,13 @@ const init = async () => {
     const gltf = await loader.loadAsync(modelUrl);
     console.log(gltf)
     model = gltf.scene;
+    scene.add(model);
     model.scale.multiplyScalar(0.5);
-    model.translate(0, 0, 0.2); // (x, y, z);
-    model.matrixAutoUpdate = false;
-    model.visible = false;
+    model.translateZ(0.2);
     model.rotateX(THREE.Math.degToRad(90));
     model.rotateY(THREE.Math.degToRad(360));
-    scene.add(model);
+    model.matrixAutoUpdate = false;
+    model.visible = false;
 
     const imageUrl = 'https://raw.githubusercontent.com/cbrito1994/Lindsey-AR/main/assets/lindsey-shatterMe.jpg';
     const imgBitmap = await getImageBitmap(imageUrl);
@@ -115,10 +118,60 @@ const render = (timestamp, frame) => {
                 updateModel(pose); // Update the position of the model based on the pose. Once we get the position of the image, we want to transfer that info into the model
             } else {
                 model.visible = false;
+                // toggleAudio();
             }
         }
     }
     renderer.render(scene, camera);
+}
+
+/***************************/
+/* Audio section */
+/***************************/
+
+const setupAudio = async () => {
+    listener = new THREE.AudioListener();
+    camera.add(listener);
+    await createPositionalAudio();
+    model.add(sound);
+}
+
+const createPositionalAudio = async () => {
+    sound = new THREE.PositionalAudio(listener);
+    sound.setRefDistance(0.1); // the distance between sound and listener at which the volume reduction starts taking effect.
+    sound.setDistanceModel('linear'); // this has to be linear for the max distance to work
+    sound.setMaxDistance(1.5); // more settings here: https://threejs.org/docs/#api/en/audio/PositionalAudio
+    sound.setLoop(true);
+    sound.setDirectionalCone(180, 230, 0);
+
+    // load a sound and set it as the PositionalAudio object's buffer
+    const audioLoader = new THREE.AudioLoader();
+    // do not load a music file as ogg, won't play in Firefox
+    const url = 'https://raw.githubusercontent.com/cbrito1994/Lindsey-AR/main/assets/04_Shatter_Me_(feat_Lzzy_Hale).m4a';
+    // const url = 'https://music.apple.com/mx/album/shatter-me-feat-lzzy-hale/1440857636?i=1440857646';
+    const buffer = await audioLoader.loadAsync(url);
+    sound.setBuffer(buffer);
+}
+
+const startAudio = () => {
+    sound.play();
+    console.log(sound);
+    audioIsPlaying = true;
+}
+
+const stopAudio = () => {
+    sound.stop();
+    audioIsPlaying = false;
+}
+
+const toggleAudio = () => {
+    if (audioIsInitialized) {
+        if (!audioIsPlaying) {
+          playAudio();
+        } else {
+          stopAudio();
+        }
+    }
 }
 
 init();
