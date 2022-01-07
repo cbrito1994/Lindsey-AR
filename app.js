@@ -92,19 +92,6 @@ const init = async () => {
     //     }
     // })
 
-    if(model.visible !== true) {
-        toggleAudio();
-    } else {
-        if(!audioIsInitialized) {
-            console.log("start audio");
-            await setupAudio();
-            audioIsInitialized = true;
-            startAudio();
-        } else {
-            toggleAudio();
-        }
-    }
-
     window.addEventListener('resize', onWindowResize, false);
 }
 
