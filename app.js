@@ -80,6 +80,18 @@ const init = async () => {
 
 
     document.body.appendChild(button);
+
+    button.addEventListener('click', async () => {
+        if (!audioIsInitialized) { // one time setup
+            await setupAudio();
+            audioIsInitialized = true;
+            startAudio();
+            console.log("start audio");
+        } else {
+            toggleAudio(); 
+        }
+    })
+
     window.addEventListener('resize', onWindowResize, false);
 }
 
@@ -116,15 +128,15 @@ const render = (timestamp, frame) => {
             const pose = frame.getPose(result.imageSpace, referenceSpace); // Hey frame get the pose of the image inside of our reference space. What this const is storing is the accurate position and rotation of where the image was found
             const state = result.trackingState;
             console.log(state);
-            if(state === "tracked" && !audioIsInitialized) {
+            if(state === "tracked") {
                 console.log("Image target has been found")
                 model.visible = true;
                 updateModel(pose); // Update the position of the model based on the pose. Once we get the position of the image, we want to transfer that info into the model
-                audio();
+                // audio();
                 console.log("start audio");
             } else {
                 model.visible = false;
-                toggleAudio();
+                // toggleAudio();
             }
         }
     }
