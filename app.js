@@ -128,16 +128,14 @@ const render = (timestamp, frame) => {
             const pose = frame.getPose(result.imageSpace, referenceSpace); // Hey frame get the pose of the image inside of our reference space. What this const is storing is the accurate position and rotation of where the image was found
             const state = result.trackingState;
             console.log(state);
-            trackedAndAudio(state, pose);
-            // if(state === "tracked") {
-            //     console.log("Image target has been found")
-            //     model.visible = true;
-            //     updateModel(pose); // Update the position of the model based on the pose. Once we get the position of the image, we want to transfer that info into the model
-            //     console.log("start audio");
-            // } else {
-            //     model.visible = false;
-            //     // toggleAudio();
-            // }
+            if(state === "tracked") {
+                console.log("Image target has been found")
+                model.visible = true;
+                updateModel(pose); // Update the position of the model based on the pose. Once we get the position of the image, we want to transfer that info into the model
+                trackedAndAudio();
+            } else {
+                model.visible = false;
+            }
         }
     }
     renderer.render(scene, camera);
@@ -147,19 +145,16 @@ const render = (timestamp, frame) => {
 /* Audio section */
 /***************************/
 
-const trackedAndAudio = async (state, pose) => {
-    if(state === "tracked" && !audioIsInitialized) {
-        console.log("Image target has been found")
-        model.visible = true;
-        updateModel(pose); // Update the position of the model based on the pose. Once we get the position of the image, we want to transfer that info into the model
-        
-        console.log("start audio");
-        await setupAudio();
-        audioIsInitialized = true;
-        startAudio();
-    } else {
-        model.visible = false;
+const trackedAndAudio = async () => {
+    if(model.visible !== true) {
         toggleAudio();
+    } else {
+        if(!audioIsInitialized) {
+            console.log("start audio");
+            await setupAudio();
+            audioIsInitialized = true;
+            startAudio();
+        }
     }
 }
 
