@@ -53,10 +53,10 @@ const init = async () => {
     const gltf = await loader.loadAsync(modelUrl);
     console.log(gltf)
     model = gltf.scene;
-    model.scale.setScalar(0.01);
+    model.scale.multiplyScalar(0.001);
     model.translateZ(0.01);
-    model.rotateX(THREE.Math.degToRad(360));
-    model.rotateY(THREE.Math.degToRad(90));
+    model.rotation.y = THREE.Math.degToRad(90)
+    model.rotation.x = THREE.Math.degToRad(360)
     model.matrixAutoUpdate = false;
     model.visible = false;
     scene.add(model);
@@ -91,6 +91,19 @@ const init = async () => {
     //         toggleAudio(); 
     //     }
     // })
+
+    if(model.visible !== true) {
+        toggleAudio();
+    } else {
+        if(!audioIsInitialized) {
+            console.log("start audio");
+            await setupAudio();
+            audioIsInitialized = true;
+            startAudio();
+        } else {
+            toggleAudio();
+        }
+    }
 
     window.addEventListener('resize', onWindowResize, false);
 }
@@ -132,10 +145,8 @@ const render = (timestamp, frame) => {
                 console.log("Image target has been found")
                 model.visible = true;
                 updateModel(pose); // Update the position of the model based on the pose. Once we get the position of the image, we want to transfer that info into the model
-                trackedAndAudio();
             } else {
                 model.visible = false;
-                trackedAndAudio();
             }
         }
     }
@@ -145,19 +156,6 @@ const render = (timestamp, frame) => {
 /***************************/
 /* Audio section */
 /***************************/
-
-const trackedAndAudio = async () => {
-    if(model.visible !== true) {
-        toggleAudio();
-    } else {
-        if(!audioIsInitialized) {
-            console.log("start audio");
-            await setupAudio();
-            audioIsInitialized = true;
-            startAudio();
-        }
-    }
-}
 
 const setupAudio = async () => {
     listener = new THREE.AudioListener();
