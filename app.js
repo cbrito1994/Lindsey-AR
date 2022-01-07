@@ -104,7 +104,7 @@ const updateModel = (pose) => {
     model.matrix.fromArray(pose.transform.matrix); // It converts all the info of position and rotation from the pose (which again, represents where the image is) into the model
 }
 
-const render = async (timestamp, frame) => {
+const render = (timestamp, frame) => {
     if(frame) {
         const results = frame.getImageTrackingResults(); // Can you tell me if there are any images that we tracked and where they are. The resul is an array
         for(const result of results) {
@@ -120,10 +120,7 @@ const render = async (timestamp, frame) => {
                 console.log("Image target has been found")
                 model.visible = true;
                 updateModel(pose); // Update the position of the model based on the pose. Once we get the position of the image, we want to transfer that info into the model
-                
-                await setupAudio();
-                audioIsInitialized = true;
-                startAudio();
+                audio();
                 console.log("start audio");
             } else {
                 model.visible = false;
@@ -137,6 +134,12 @@ const render = async (timestamp, frame) => {
 /***************************/
 /* Audio section */
 /***************************/
+
+const audio = async () => {
+    await setupAudio();
+    audioIsInitialized = true;
+    startAudio();
+}
 
 const setupAudio = async () => {
     listener = new THREE.AudioListener();
