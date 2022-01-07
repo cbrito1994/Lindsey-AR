@@ -53,13 +53,13 @@ const init = async () => {
     const gltf = await loader.loadAsync(modelUrl);
     console.log(gltf)
     model = gltf.scene;
-    scene.add(model);
-    model.scale.multiplyScalar(0.5);
-    model.translateZ(0.2);
+    model.scale.multiplyScalar(0.01);
+    model.translateZ(0.01);
     model.rotateX(THREE.Math.degToRad(90));
     model.rotateY(THREE.Math.degToRad(360));
     model.matrixAutoUpdate = false;
     model.visible = false;
+    scene.add(model);
 
     const imageUrl = 'https://raw.githubusercontent.com/cbrito1994/Lindsey-AR/main/assets/lindsey-shatterMe.jpg';
     const imgBitmap = await getImageBitmap(imageUrl);
@@ -71,7 +71,11 @@ const init = async () => {
                 image: imgBitmap, // tell webxr this is the image target we want to track
                 widthInMeters: 0.2
             }
-        ]
+        ],
+        optionalFeatures: ["dom-overlay", "dom-overlay-for-handheld-ar"],
+        domOverlay: {
+            root: document.body
+        }
     });
 
 
@@ -100,7 +104,7 @@ const updateModel = (pose) => {
     model.matrix.fromArray(pose.transform.matrix); // It converts all the info of position and rotation from the pose (which again, represents where the image is) into the model
 }
 
-const render = (timestamp, frame) => {
+const render = async (timestamp, frame) => {
     if(frame) {
         const results = frame.getImageTrackingResults(); // Can you tell me if there are any images that we tracked and where they are. The resul is an array
         for(const result of results) {
@@ -112,13 +116,18 @@ const render = (timestamp, frame) => {
             const pose = frame.getPose(result.imageSpace, referenceSpace); // Hey frame get the pose of the image inside of our reference space. What this const is storing is the accurate position and rotation of where the image was found
             const state = result.trackingState;
             console.log(state);
-            if(state === "tracked") {
+            if(state === "tracked" && !audioIsInitialized) {
                 console.log("Image target has been found")
                 model.visible = true;
                 updateModel(pose); // Update the position of the model based on the pose. Once we get the position of the image, we want to transfer that info into the model
+                
+                await setupAudio();
+                audioIsInitialized = true;
+                startAudio();
+                console.log("start audio");
             } else {
                 model.visible = false;
-                // toggleAudio();
+                toggleAudio();
             }
         }
     }
