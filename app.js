@@ -53,8 +53,7 @@ const init = async () => {
     const gltf = await loader.loadAsync(modelUrl);
     console.log(gltf)
     model = gltf.scene;
-    // model.scale.multiplyScalar(0.001);
-    model.scale = 0.01;
+    model.scale.multiplyScalar(0.00001);
     model.translateZ(0.01);
     model.rotation.y = THREE.Math.degToRad(90)
     model.rotation.x = THREE.Math.degToRad(90)
