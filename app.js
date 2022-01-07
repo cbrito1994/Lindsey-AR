@@ -135,6 +135,7 @@ const render = (timestamp, frame) => {
                 trackedAndAudio();
             } else {
                 model.visible = false;
+                trackedAndAudio();
             }
         }
     }
