@@ -128,7 +128,7 @@ const render = (timestamp, frame) => {
             const pose = frame.getPose(result.imageSpace, referenceSpace); // Hey frame get the pose of the image inside of our reference space. What this const is storing is the accurate position and rotation of where the image was found
             const state = result.trackingState;
             console.log(state);
-            trackedAndAudio(pose);
+            trackedAndAudio(state, pose);
             // if(state === "tracked") {
             //     console.log("Image target has been found")
             //     model.visible = true;
@@ -147,7 +147,7 @@ const render = (timestamp, frame) => {
 /* Audio section */
 /***************************/
 
-const trackedAndAudio = async (pose) => {
+const trackedAndAudio = async (state, pose) => {
     if(state === "tracked" && !audioIsInitialized) {
         console.log("Image target has been found")
         model.visible = true;
