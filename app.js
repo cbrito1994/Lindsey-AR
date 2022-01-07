@@ -53,10 +53,11 @@ const init = async () => {
     const gltf = await loader.loadAsync(modelUrl);
     console.log(gltf)
     model = gltf.scene;
-    model.scale.multiplyScalar(0.001);
+    // model.scale.multiplyScalar(0.001);
+    model.scale(0.01, 0.01, 0.01)
     model.translateZ(0.01);
     model.rotation.y = THREE.Math.degToRad(90)
-    model.rotation.x = THREE.Math.degToRad(360)
+    model.rotation.x = THREE.Math.degToRad(90)
     model.matrixAutoUpdate = false;
     model.visible = false;
     scene.add(model);
@@ -129,7 +130,7 @@ const updateModel = (pose) => {
     model.matrix.fromArray(pose.transform.matrix); // It converts all the info of position and rotation from the pose (which again, represents where the image is) into the model
 }
 
-const render = (timestamp, frame) => {
+const render = async (timestamp, frame) => {
     if(frame) {
         const results = frame.getImageTrackingResults(); // Can you tell me if there are any images that we tracked and where they are. The resul is an array
         for(const result of results) {
@@ -145,8 +146,15 @@ const render = (timestamp, frame) => {
                 console.log("Image target has been found")
                 model.visible = true;
                 updateModel(pose); // Update the position of the model based on the pose. Once we get the position of the image, we want to transfer that info into the model
+                if(!audioIsInitialized) {
+                    console.log("start audio");
+                    await setupAudio();
+                    audioIsInitialized = true;
+                    startAudio();
+                }
             } else {
                 model.visible = false;
+                toggleAudio();
             }
         }
     }
@@ -194,11 +202,15 @@ const stopAudio = () => {
 
 const toggleAudio = () => {
     if (audioIsInitialized) {
-        if (!audioIsPlaying) {
-          playAudio();
-        } else {
-          stopAudio();
+        if(audioIsPlaying) {
+            stopAudio();
         }
+        
+        // if (!audioIsPlaying) {
+        //   playAudio();
+        // } else {
+        //   stopAudio();
+        // }
     }
 }
 
