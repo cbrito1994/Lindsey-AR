@@ -53,10 +53,10 @@ const init = async () => {
     const gltf = await loader.loadAsync(modelUrl);
     console.log(gltf)
     model = gltf.scene;
-    model.scale.multiplyScalar(0.00001);
-    model.translateZ(0.01);
-    model.rotation.y = THREE.Math.degToRad(90)
-    model.rotation.x = THREE.Math.degToRad(90)
+    model.scale.multiplyScalar(0.01);
+    model.translateZ(0.001);
+    // model.rotation.y = THREE.Math.degToRad(90)
+    model.rotation.x = THREE.Math.degToRad(30);
     model.matrixAutoUpdate = false;
     model.visible = false;
     scene.add(model);
@@ -91,6 +91,14 @@ const init = async () => {
     //         toggleAudio(); 
     //     }
     // })
+
+    button.addEventListener('click', async () => {
+        if (!audioIsInitialized) { // one time setup
+            await setupAudio();
+        } else {
+            toggleAudio(); 
+        }
+    })
 
     window.addEventListener('resize', onWindowResize, false);
 }
@@ -134,13 +142,15 @@ const render = async (timestamp, frame) => {
                 updateModel(pose); // Update the position of the model based on the pose. Once we get the position of the image, we want to transfer that info into the model
                 if(!audioIsInitialized) {
                     console.log("start audio");
-                    await setupAudio();
+                    // await setupAudio();
                     audioIsInitialized = true;
                     startAudio();
                 }
             } else {
+                console.log("no model/audio")
                 model.visible = false;
-                toggleAudio();
+                // toggleAudio();
+                stopAudio();
             }
         }
     }
@@ -184,6 +194,8 @@ const startAudio = () => {
 const stopAudio = () => {
     sound.stop();
     audioIsPlaying = false;
+
+    audioIsInitialized = false;
 }
 
 const toggleAudio = () => {
@@ -193,7 +205,7 @@ const toggleAudio = () => {
         }
 
         // if (!audioIsPlaying) {
-        //   playAudio();
+        //   startAudio();
         // } else {
         //   stopAudio();
         // }
