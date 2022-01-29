@@ -57,6 +57,9 @@ const init = async () => {
     model.translateZ(0.001);
     // model.rotation.y = THREE.Math.degToRad(90)
     model.rotation.x = THREE.Math.degToRad(30);
+    // model.rotateX(THREE.Math.degToRad(30));
+    model.updateModel();
+    // model.update()
     model.matrixAutoUpdate = false;
     model.visible = false;
     scene.add(model);
